@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.GsonBuilder
 import com.lhj.assignment.Data.DataClass
+import com.lhj.assignment.Database.DBHelper
 import com.lhj.assignment.Fragment.FavoritesFragment
 import com.lhj.assignment.Fragment.MainFragment
 import com.lhj.assignment.Retrofit2.NetworkAPI
@@ -23,11 +24,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var dbHelper : DBHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         //TODO 데이터 받기 (코루틴) DB에 넣어서 관리
+        dbHelper = DBHelper(this, "main.db", null, 1)
+
 
         var tabLayout : TabLayout = findViewById(R.id.tabs)
 
@@ -58,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                 transaction.replace(R.id.container, FavoritesFragment())
             }
         }
-        transaction.addToBackStack(null)
+//        transaction.addToBackStack(null)
         transaction.commit()
     }
 
@@ -81,6 +86,21 @@ class MainActivity : AppCompatActivity() {
                 Log.d("결과", "성공 : ${response.raw()}")
                 Log.d("결과", "성공 : ${response.body()}")
                 Log.d("결과", "성공 : ${response.body()?.data?.product?.get(0)?.name}")
+
+                val product = response.body()?.data?.product                    //서버에서 받은 데이터
+                var hotel : List<DataClass.MainData> = dbHelper.selectData()    //DB의 데이터
+
+                //서버에서 받은데이터와 DB의 데이터를 비교하여 중복체크 (중복되지 않은 것만 저장)
+                for (i in hotel?.indices!!) {
+                    for (j in product?.indices!!) {
+                        if (hotel[i].id.equals(product[j].id)){
+                            Log.e("asdfgg", "중복입니다 : " + hotel[i].id);
+                        } else{
+                            dbHelper.insertData(product[i])
+                        }
+//                    dbHelper.insertData(product[i])
+                    }
+                }
 
             }
 

@@ -1,5 +1,6 @@
 package com.lhj.assignment.Adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,9 @@ import com.bumptech.glide.Glide
 import com.lhj.assignment.Data.DataClass
 import com.lhj.assignment.R
 
-class MainListAdapter : RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
+class MainListAdapter(private val context: Context, private val mData: List<DataClass.MainData>) : RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
 
-    private var data = mutableListOf<DataClass.MainData>()
+//    private var data = mutableListOf<DataClass.MainData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.main_list_item,parent,false)
@@ -20,11 +21,11 @@ class MainListAdapter : RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return data.size
+        return mData.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(data[position])
+        holder.bind(mData[position])
     }
 
     inner class ViewHolder(view: View) :
@@ -36,7 +37,7 @@ class MainListAdapter : RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
 
         fun bind(mData: DataClass.MainData) {
             title_tv.text = mData.name
-            late_tv.text = mData.name
+            late_tv.text = mData.rate.toString()
             Glide.with(itemView).load(mData.thumbnail).into(thumbnail_iv)
 
         }

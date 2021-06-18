@@ -30,7 +30,8 @@ class DataClass {
         @SerializedName("thumbnail")
         var thumbnail: String,          // 썸네일 경로
         @SerializedName("description")
-        var description: Description          // 상세정보
+        var description: Description,          // 상세정보
+        var favorites: String
     )
 
     data class Description(
