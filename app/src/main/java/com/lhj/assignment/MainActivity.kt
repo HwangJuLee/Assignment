@@ -16,15 +16,32 @@ import com.lhj.assignment.Database.DBHelper
 import com.lhj.assignment.Fragment.FavoritesFragment
 import com.lhj.assignment.Fragment.MainFragment
 import com.lhj.assignment.Retrofit2.NetworkAPI
+import com.lhj.assignment.Util.BaseActivity
+import com.lhj.assignment.Util.MainViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
     lateinit var dbHelper : DBHelper
+
+    override val layoutResourceId: Int get() = R.layout.activity_main
+    override val viewModel: MainViewModel by viewModel()
+
+    override fun initStartView() {
+        TODO("Not yet implemented")
+    }
+
+    override fun initDataBinding() {
+        TODO("Not yet implemented")
+    }
+
+    override fun initAfterBinding() {
+        TODO("Not yet implemented")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

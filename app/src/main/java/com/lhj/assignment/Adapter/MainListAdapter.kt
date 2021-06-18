@@ -13,8 +13,6 @@ import com.lhj.assignment.R
 
 class MainListAdapter(private val context: Context, private val mData: List<DataClass.MainData>) : RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
 
-//    private var data = mutableListOf<DataClass.MainData>()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.main_list_item,parent,false)
         return ViewHolder(view)
