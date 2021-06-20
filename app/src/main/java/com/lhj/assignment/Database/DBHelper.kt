@@ -15,25 +15,24 @@ class DBHelper(
     version: Int
 ) : SQLiteOpenHelper(context, name, factory, version) {
 
-    val MAIN_TABLE: String = "main"
+    val FAV_TABLE: String = "favorite"
 
     override fun onCreate(db: SQLiteDatabase) {
-        var sql_create_table: String = "CREATE TABLE if not exists " + MAIN_TABLE + " (" +
+        var sql_create_table: String = "CREATE TABLE if not exists " + FAV_TABLE + " (" +
                 "id integer primary key," +
-                "name text, thumbnail text, imagePath text, subject text, price integer, rate real, favorites text);";
-
+                "name text, thumbnail text, rate real, regTime text);";
 
         db.execSQL(sql_create_table)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        var sql_drop_table: String = "DROP TABLE if exists " + MAIN_TABLE
+        var sql_drop_table: String = "DROP TABLE if exists " + FAV_TABLE
 
         db.execSQL(sql_drop_table)
         onCreate(db)
     }
 
-    fun insertData(mData: DataClass.MainData) {
+    fun insertData(mData: DataClass.FavoriteData) {
 
         Log.e("asdfgg", "DB 삽입 : " + mData.name)
 
@@ -42,39 +41,42 @@ class DBHelper(
         contentValues.put("id", mData.id)
         contentValues.put("name", mData.name)
         contentValues.put("thumbnail", mData.thumbnail)
-        contentValues.put("imagePath", mData.description.imagePath)
-        contentValues.put("subject", mData.description.subject)
-        contentValues.put("price", mData.description.price)
         contentValues.put("rate", mData.rate)
-        contentValues.put("favorites", "N")
+        contentValues.put("regTime", mData.regTime)
 
-        database.insert(MAIN_TABLE, null, contentValues)
+        database.insert(FAV_TABLE, null, contentValues)
     }
 
-    fun selectData(): List<DataClass.MainData> {
-        val resultData: MutableList<DataClass.MainData> = mutableListOf()
-        lateinit var data: DataClass.MainData
+    fun selectData(): List<DataClass.FavoriteData> {
+        val resultData: MutableList<DataClass.FavoriteData> = mutableListOf()
+        lateinit var data: DataClass.FavoriteData
         val database = this.readableDatabase
-        var result: Cursor = database.query(MAIN_TABLE, null, null, null, null, null, null)
+        var result: Cursor = database.query(FAV_TABLE, null, null, null, null, null, null)
         while (result.moveToNext()) {
 
-            data = DataClass.MainData(
+            data = DataClass.FavoriteData(
                 result.getInt(result.getColumnIndex("id")),
                 result.getString(result.getColumnIndex("name")),
                 result.getDouble(result.getColumnIndex("rate")),
                 result.getString(result.getColumnIndex("thumbnail")),
-                DataClass.Description(
-                    result.getString(result.getColumnIndex("imagePath")),
-                    result.getString(result.getColumnIndex("subject")),
-                    result.getInt(result.getColumnIndex("price"))
-                ),
-                result.getString(result.getColumnIndex("favorites"))
+                result.getString(result.getColumnIndex("regTime"))
             )
 
             resultData.add(result.position, data)
         }
 
         return resultData
+    }
+
+    fun updateFavData(id : Int, isFav : String, regTime : String) {
+        val database = this.writableDatabase
+        database.execSQL("UPDATE "+FAV_TABLE+" SET regTime = "+"'"+regTime+"'" + " WHERE id == " + id)
+    }
+
+    fun deleteFavData(id : Int) {
+        Log.e("asdfgg" , "삭제??")
+        val database = this.writableDatabase
+        database.execSQL("DELETE FROM $FAV_TABLE WHERE id == $id")
     }
 
 }

@@ -5,5 +5,5 @@ import io.reactivex.Single
 import retrofit2.Call
 
 interface DataModel {
-    fun getData(apiType:String): Call<DataClass.ResponseData>
+    fun getData(apiType:String): Single<DataClass.ResponseData>
 }

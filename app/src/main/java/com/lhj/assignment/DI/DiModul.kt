@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 var retrofitPart = module {
     single<NetworkAPI> {
         Retrofit.Builder()
-            .baseUrl("https://dapi.kakao.com")
+            .baseUrl("https://www.gccompany.co.kr/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -40,4 +40,4 @@ var viewModelPart = module {
     }
 }
 
-var myDiModule = listOf(retrofitPart, adapterPart, modelPart, viewModelPart)
+var mainDiModule = listOf(retrofitPart, adapterPart, modelPart, viewModelPart)

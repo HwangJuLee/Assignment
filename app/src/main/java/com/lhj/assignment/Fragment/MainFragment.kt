@@ -6,73 +6,127 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.GsonBuilder
 import com.lhj.assignment.Adapter.MainListAdapter
 import com.lhj.assignment.Data.DataClass
+import com.lhj.assignment.Database.DBHelper
+import com.lhj.assignment.MainActivity
+import com.lhj.assignment.Model.DataModel
 import com.lhj.assignment.R
 import com.lhj.assignment.Retrofit2.NetworkAPI
+import com.lhj.assignment.Util.MainViewModel
+import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.time.LocalDateTime
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(R.layout.fragment_main) {
 
-    lateinit var mData: List<DataClass.MainData>
-    lateinit var mainList : RecyclerView
+    val viewModel: MainViewModel by viewModel()    //koin
+    lateinit var dbHelper: DBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-//        searchTask()
+        Log.e("ASdfgg", "MainFragment....")
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        var view = inflater.inflate(R.layout.fragment_main, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        mainList = view.findViewById<RecyclerView>(R.id.main_list)
-        mainList.layoutManager = LinearLayoutManager(context)
-//        mainList.adapter = MainListAdapter(requireContext(), mData)
+        var mainListAdapter = MainListAdapter()
+        dbHelper = DBHelper(context, "main.db", null, 1)
 
-        return view
-    }
+        main_list.layoutManager = LinearLayoutManager(context)
+        main_list.adapter = mainListAdapter
 
-    fun searchTask() {
+        mainListAdapter.setFavDataList(dbHelper.selectData())
 
-        var gson = GsonBuilder().setLenient().create()
+        subscribeObservers(main_list.adapter as MainListAdapter)
+        getApiData()
 
-        val retrofit = Retrofit.Builder().baseUrl("https://www.gccompany.co.kr/")
-            .addConverterFactory(GsonConverterFactory.create(gson)).build()
+        mainListAdapter.setOnFavClickListener(object : MainListAdapter.Fav_Click {
+            override fun onFav_click(v: View?, position: Int) {
+                //즐겨찾기 존재 유무 확인
+                var dbData = mainListAdapter.getFavDataList()
+                Log.e("asdfgg", "dbData : " + dbData.size)
+                if (dbData.size == 0) {
+                    dbHelper.insertData(
+                        DataClass.FavoriteData(
+                            mainListAdapter.getData(position).id,
+                            mainListAdapter.getData(position).name,
+                            mainListAdapter.getData(position).rate,
+                            mainListAdapter.getData(position).thumbnail,
+                            LocalDateTime.now().toString().replace("T", " ")
+                        )
+                    )
+                } else {
+                    for (i in dbData.indices) {
+                        Log.e("ASdfgg" , "dbData : " + dbData.get(i).id + "    mainListAdapter.getData(position).id : " + mainListAdapter.getData(position).id)
+                        if (dbData.get(i).id == mainListAdapter.getData(position).id) {
+                            Log.e("asdfgg" , "삭제?")
+                            dbHelper.deleteFavData(mainListAdapter.getData(position).id)
+                            break
+                        } else {
+                            dbHelper.insertData(
+                                DataClass.FavoriteData(
+                                    mainListAdapter.getData(position).id,
+                                    mainListAdapter.getData(position).name,
+                                    mainListAdapter.getData(position).rate,
+                                    mainListAdapter.getData(position).thumbnail,
+                                    LocalDateTime.now().toString().replace("T", " ")
+                                )
+                            )
+                        }
+                    }
+                }
 
-        val api = retrofit.create(NetworkAPI::class.java)
-        val callgetSearchLocation =
-            api.getData("1.json")
-
-        callgetSearchLocation.enqueue(object : Callback<DataClass.ResponseData> {
-            override fun onResponse(
-                call: Call<DataClass.ResponseData>,
-                response: Response<DataClass.ResponseData>
-            ) {
-                Log.d("결과", "성공 : ${response.raw()}")
-                Log.d("결과", "성공 : ${response.body()}")
-                Log.d("결과", "성공 : ${response.body()?.data?.product?.get(0)?.name}")
-
-                mData = response.body()?.data?.product!!
-
-                mainList.adapter = MainListAdapter(requireContext(), mData)
-            }
-
-
-            override fun onFailure(call: Call<DataClass.ResponseData>, t: Throwable) {
-                Log.e("결과:", "실패 : $t")
+                mainListAdapter.setFavDataList(dbHelper.selectData())
             }
         })
+    }
+
+    private fun subscribeObservers(adapter: MainListAdapter) {
+        viewModel.responseLiveData1.observe(this@MainFragment.viewLifecycleOwner, Observer {
+            Log.e("Asdfgg", "data1 : " + it.data.product.get(0).name)
+            adapter.setDataList(it.data?.product)
+        })
+
+        viewModel.responseLiveData2.observe(this@MainFragment.viewLifecycleOwner, Observer {
+            Log.e("Asdfgg", "data2 : " + it.data.product.get(0).name)
+            adapter.setDataList(it.data?.product)
+        })
+
+        viewModel.responseLiveData3.observe(this@MainFragment.viewLifecycleOwner, Observer {
+            Log.e("Asdfgg", "data3 : " + it.data.product.get(0).name)
+            adapter.setDataList(it.data?.product)
+        })
+    }
+
+    fun getApiData() = runBlocking<Unit> {
+        launch(Dispatchers.IO) {
+            Log.e("asdfgg", "순서 1")
+            viewModel.getResponseData("1.json")
+        }
+        launch(Dispatchers.IO) {
+            Log.e("asdfgg", "순서 2")
+            delay(100)
+            viewModel.getResponseData("2.json")
+        }
+        launch(Dispatchers.IO) {
+            Log.e("asdfgg", "순서 3")
+            delay(200)
+            viewModel.getResponseData("3.json")
+        }
     }
 }
