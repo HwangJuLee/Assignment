@@ -1,22 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="15dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/thumbnail_iv"
+    <FrameLayout
+        android:id="@+id/thumbnail_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    </androidx.appcompat.widget.AppCompatImageView>
+        <ImageView
+            android:id="@+id/thumbnail_iv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/fav_iv"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#00000000"
+            android:src="@drawable/ic_star_off">
+
+        </ImageView>
+
+    </FrameLayout>
+
 
     <TextView
-        android:id="@+id/title_tv"
+        android:id="@+id/name_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -26,7 +47,7 @@
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/thumbnail_iv">
+        app:layout_constraintTop_toBottomOf="@+id/thumbnail_layout">
 
     </TextView>
 
@@ -36,54 +57,26 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_tv">
+        app:layout_constraintTop_toBottomOf="@+id/name_tv">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+        <ImageView
+            android:layout_width="14dp"
+            android:layout_height="14dp"
             android:src="@drawable/ic_rate">
 
-        </androidx.appcompat.widget.AppCompatImageView>
+        </ImageView>
 
         <TextView
-            android:id="@+id/late_tv"
+            android:id="@+id/rate_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:textColor="#333333"
             android:text="9.9"
+            android:textColor="#333333"
             android:textSize="14dp">
 
         </TextView>
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-        </View>
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/fav_iv"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginRight="10dp"
-            android:background="#00000000"
-            android:src="@drawable/ic_star_off">
-
-        </androidx.appcompat.widget.AppCompatImageView>
-
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="#333333"
-        app:layout_constraintTop_toBottomOf="@+id/rate"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-    </View>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

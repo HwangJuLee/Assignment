@@ -1,6 +1,7 @@
 package com.lhj.assignment.Data
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 class DataClass {
 
@@ -31,22 +32,7 @@ class DataClass {
         var thumbnail: String,          // 썸네일 경로
         @SerializedName("description")
         var description: Description          // 상세정보
-    )
-
-//    data class MainData(
-//        @SerializedName("id")
-//        var id: Int,                // 게시글 ID
-//        @SerializedName("name")
-//        var name: String,          // 게시글 이름
-//        @SerializedName("rate")
-//        var rate: Double,          // 평점
-//        @SerializedName("thumbnail")
-//        var thumbnail: String,          // 썸네일 경로
-//        @SerializedName("description")
-//        var description: Description,          // 상세정보
-//        var favorites: String,
-//        var regTime: String
-//    )
+    ) : Serializable
 
     data class Description(
         @SerializedName("imagePath")
@@ -55,7 +41,7 @@ class DataClass {
         var subject: String,        // 설명
         @SerializedName("price")
         var price: Int              // 가격
-    )
+    ) : Serializable
 
     data class FavoriteData(
         var id: Int,                // 게시글 ID

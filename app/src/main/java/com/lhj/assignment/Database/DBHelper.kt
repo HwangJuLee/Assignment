@@ -17,6 +17,12 @@ class DBHelper(
 
     val FAV_TABLE: String = "favorite"
 
+    companion object {
+        const val DESC = "DESC"
+        const val ASC = "ASC"
+    }
+
+
     override fun onCreate(db: SQLiteDatabase) {
         var sql_create_table: String = "CREATE TABLE if not exists " + FAV_TABLE + " (" +
                 "id integer primary key," +
@@ -68,13 +74,55 @@ class DBHelper(
         return resultData
     }
 
-    fun updateFavData(id : Int, isFav : String, regTime : String) {
-        val database = this.writableDatabase
-        database.execSQL("UPDATE "+FAV_TABLE+" SET regTime = "+"'"+regTime+"'" + " WHERE id == " + id)
+    fun checkData(id : Int): List<DataClass.FavoriteData> {
+        val resultData: MutableList<DataClass.FavoriteData> = mutableListOf()
+        lateinit var data: DataClass.FavoriteData
+        val database = this.readableDatabase
+        var result: Cursor = database.rawQuery("SELECT * FROM " + FAV_TABLE + " WHERE id == " + id,null)
+
+        while (result.moveToNext()) {
+            data = DataClass.FavoriteData(
+                result.getInt(result.getColumnIndex("id")),
+                result.getString(result.getColumnIndex("name")),
+                result.getDouble(result.getColumnIndex("rate")),
+                result.getString(result.getColumnIndex("thumbnail")),
+                result.getString(result.getColumnIndex("regTime"))
+            )
+            resultData.add(result.position, data)
+        }
+
+        return resultData
     }
 
-    fun deleteFavData(id : Int) {
-        Log.e("asdfgg" , "삭제??")
+    fun selectData(orderBy: String, orderType: String): List<DataClass.FavoriteData> {
+        val resultData: MutableList<DataClass.FavoriteData> = mutableListOf()
+        lateinit var data: DataClass.FavoriteData
+        val database = this.readableDatabase
+        var result: Cursor =
+            database.query(FAV_TABLE, null, null, null, null, null, orderBy + " " + orderType)
+        while (result.moveToNext()) {
+
+            data = DataClass.FavoriteData(
+                result.getInt(result.getColumnIndex("id")),
+                result.getString(result.getColumnIndex("name")),
+                result.getDouble(result.getColumnIndex("rate")),
+                result.getString(result.getColumnIndex("thumbnail")),
+                result.getString(result.getColumnIndex("regTime"))
+            )
+
+            resultData.add(result.position, data)
+        }
+
+        return resultData
+    }
+
+    fun updateFavData(id: Int, isFav: String, regTime: String) {
+        val database = this.writableDatabase
+        database.execSQL("UPDATE " + FAV_TABLE + " SET regTime = " + "'" + regTime + "'" + " WHERE id == " + id)
+    }
+
+    fun deleteFavData(id: Int) {
+        Log.e("asdfgg", "삭제??")
         val database = this.writableDatabase
         database.execSQL("DELETE FROM $FAV_TABLE WHERE id == $id")
     }

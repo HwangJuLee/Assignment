@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".DetailActivity">
-
+    android:layout_height="wrap_content"
+    android:paddingBottom="15dp">
 
     <FrameLayout
         android:id="@+id/thumbnail_layout"
@@ -51,33 +49,17 @@
 
     </TextView>
 
-    <TextView
-        android:id="@+id/subject_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center_vertical"
-        android:text="ggggggg"
-        android:textColor="#888888"
-        android:textSize="14dp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_tv">
-
-    </TextView>
-
     <LinearLayout
         android:id="@+id/rate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:gravity="center_vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/subject_tv">
+        app:layout_constraintTop_toBottomOf="@+id/name_tv">
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
             android:src="@drawable/ic_rate">
 
         </ImageView>
@@ -87,25 +69,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="9.9"
             android:textColor="#333333"
-            android:textSize="16dp">
+            android:text="9.9"
+            android:textSize="14dp">
 
         </TextView>
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/price_tv"
+        android:id="@+id/date_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:text="ggggggg"
-        android:textColor="#000000"
-        android:textSize="22dp"
-        android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/subject_tv">
+        android:layout_marginLeft="5dp"
+        android:text="9.9"
+        android:textColor="#333333"
+        android:textSize="14dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rate">
 
     </TextView>
 

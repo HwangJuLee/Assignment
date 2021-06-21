@@ -17,6 +17,7 @@ import com.lhj.assignment.MainActivity
 import com.lhj.assignment.Model.DataModel
 import com.lhj.assignment.R
 import com.lhj.assignment.Retrofit2.NetworkAPI
+import com.lhj.assignment.Util.FavClick
 import com.lhj.assignment.Util.MainViewModel
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +45,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var mainListAdapter = MainListAdapter()
+        var mainListAdapter = MainListAdapter(context)
         dbHelper = DBHelper(context, "main.db", null, 1)
 
         main_list.layoutManager = LinearLayoutManager(context)
@@ -53,10 +54,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         mainListAdapter.setFavDataList(dbHelper.selectData())
 
         subscribeObservers(main_list.adapter as MainListAdapter)
+
         getApiData()
 
-        mainListAdapter.setOnFavClickListener(object : MainListAdapter.Fav_Click {
-            override fun onFav_click(v: View?, position: Int) {
+        mainListAdapter.setOnFavClickListener(object : FavClick {
+            override fun onFavClick(v: View?, position: Int) {
                 //즐겨찾기 존재 유무 확인
                 var dbData = mainListAdapter.getFavDataList()
                 Log.e("asdfgg", "dbData : " + dbData.size)
@@ -71,24 +73,37 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                         )
                     )
                 } else {
-                    for (i in dbData.indices) {
-                        Log.e("ASdfgg" , "dbData : " + dbData.get(i).id + "    mainListAdapter.getData(position).id : " + mainListAdapter.getData(position).id)
-                        if (dbData.get(i).id == mainListAdapter.getData(position).id) {
-                            Log.e("asdfgg" , "삭제?")
-                            dbHelper.deleteFavData(mainListAdapter.getData(position).id)
-                            break
-                        } else {
-                            dbHelper.insertData(
-                                DataClass.FavoriteData(
-                                    mainListAdapter.getData(position).id,
-                                    mainListAdapter.getData(position).name,
-                                    mainListAdapter.getData(position).rate,
-                                    mainListAdapter.getData(position).thumbnail,
-                                    LocalDateTime.now().toString().replace("T", " ")
-                                )
+                    if (dbHelper.checkData(mainListAdapter.getData(position).id).size != 0) {
+                        dbHelper.deleteFavData(mainListAdapter.getData(position).id)
+                    } else {
+                        dbHelper.insertData(
+                            DataClass.FavoriteData(
+                                mainListAdapter.getData(position).id,
+                                mainListAdapter.getData(position).name,
+                                mainListAdapter.getData(position).rate,
+                                mainListAdapter.getData(position).thumbnail,
+                                LocalDateTime.now().toString().replace("T", " ")
                             )
-                        }
+                        )
                     }
+
+//                    for (i in dbData.indices) {
+//                        Log.e("ASdfgg" , "dbData : " + dbData.get(i).id + "    mainListAdapter.getData(position).id : " + mainListAdapter.getData(position).id)
+//                        if (dbData.get(i).id == mainListAdapter.getData(position).id) {
+//                            //있음
+//                            dbHelper.deleteFavData(mainListAdapter.getData(position).id)
+//                        } else {
+//                            dbHelper.insertData(
+//                                DataClass.FavoriteData(
+//                                    mainListAdapter.getData(position).id,
+//                                    mainListAdapter.getData(position).name,
+//                                    mainListAdapter.getData(position).rate,
+//                                    mainListAdapter.getData(position).thumbnail,
+//                                    LocalDateTime.now().toString().replace("T", " ")
+//                                )
+//                            )
+//                        }
+//                    }
                 }
 
                 mainListAdapter.setFavDataList(dbHelper.selectData())

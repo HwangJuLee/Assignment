@@ -24,6 +24,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
+    //TODO : 1. 리스트 페이징 2. 프레그먼트 이동 3. 즐겨찾기 정렬 (O) 4. 상세화면(갔다 온 뒤 리프레쉬) 5. 데이터 순차적으로 받기 6. UI 작업 7. 코드정리 및 주석
+
     lateinit var dbHelper: DBHelper
 
     override val layoutResourceId: Int get() = R.layout.activity_main   //resource init
@@ -36,19 +38,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     override fun initDataBinding() {
         Log.e("Asdfgg", "initDataBinding");
         dbHelper = DBHelper(this, "main.db", null, 1)
-//        viewModel.responseLiveData.observe(this, Observer {
-//            Log.e("Asdfgg", "data : " + it.data.product.get(0).name)
-//
-//            val product = it.data?.product                                  //서버에서 받은 데이터
-//
-//            //서버에서 받은데이터와 DB의 데이터를 비교하여 중복체크 (중복되지 않은 것만 저장)
-//
-//            for (i in product?.indices!!) {
-//                dbHelper.insertData(product[i])
-//            }
-//
-//            supportFragmentManager.beginTransaction().replace(R.id.container, MainFragment()).commit()  //메인 프래그먼트 설정
-//        })
     }
 
     override fun initAfterBinding() {
@@ -65,42 +54,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             }
         })
 
-        supportFragmentManager.beginTransaction().replace(R.id.container, MainFragment()).commit()  //메인 프래그먼트 설정
-
-//        test()
-
-//        GlobalScope.launch(Dispatchers.Main) {
-//            val job1 = async(Dispatchers.IO) {
-//                viewModel.getResponseData("1.json")
-//            }
-//            val job2 = async(Dispatchers.IO) {
-//                viewModel.getResponseData("2.json")
-//            }
-//            val job3 = async(Dispatchers.IO) {
-//                viewModel.getResponseData("3.json")
-//            }
-//
-////            job1.await()
-////            job2.await()
-////            job3.await()
-//        }
-    }
-
-    fun test() = runBlocking<Unit> {
-        launch(Dispatchers.IO) {
-            Log.e("asdfgg", "순서 1")
-            viewModel.getResponseData("1.json")
-        }
-        launch(Dispatchers.IO) {
-            Log.e("asdfgg", "순서 2")
-            delay(100)
-            viewModel.getResponseData("2.json")
-        }
-        launch(Dispatchers.IO) {
-            Log.e("asdfgg", "순서 3")
-            delay(200)
-            viewModel.getResponseData("3.json")
-        }
+        supportFragmentManager.beginTransaction().replace(R.id.container, MainFragment())
+            .commit()  //메인 프래그먼트 설정
     }
 
     private fun switchFragment(type: Int?) {
@@ -113,51 +68,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 transaction.replace(R.id.container, FavoritesFragment())
             }
         }
-//        transaction.addToBackStack(null)
         transaction.commit()
     }
-
-//    fun searchTask() {
-//
-//        var gson = GsonBuilder().setLenient().create()
-//
-//        val retrofit = Retrofit.Builder().baseUrl("https://www.gccompany.co.kr/")
-//            .addConverterFactory(GsonConverterFactory.create(gson)).build()
-//
-//        val api = retrofit.create(NetworkAPI::class.java)
-//        val callgetSearchLocation =
-//            api.getData("1.json")
-//
-//        callgetSearchLocation.enqueue(object : Callback<DataClass.ResponseData> {
-//            override fun onResponse(
-//                call: Call<DataClass.ResponseData>,
-//                response: Response<DataClass.ResponseData>
-//            ) {
-//                Log.d("결과", "성공 : ${response.raw()}")
-//                Log.d("결과", "성공 : ${response.body()}")
-//                Log.d("결과", "성공 : ${response.body()?.data?.product?.get(0)?.name}")
-//
-//                val product = response.body()?.data?.product                    //서버에서 받은 데이터
-//                var hotel: List<DataClass.MainData> = dbHelper.selectData()    //DB의 데이터
-//
-//                //서버에서 받은데이터와 DB의 데이터를 비교하여 중복체크 (중복되지 않은 것만 저장)
-//                for (i in hotel?.indices!!) {
-//                    for (j in product?.indices!!) {
-//                        if (hotel[i].id.equals(product[j].id)) {
-//                            Log.e("asdfgg", "중복입니다 : " + hotel[i].id);
-//                        } else {
-//                            dbHelper.insertData(product[i])
-//                        }
-////                    dbHelper.insertData(product[i])
-//                    }
-//                }
-//
-//            }
-//
-//
-//            override fun onFailure(call: Call<DataClass.ResponseData>, t: Throwable) {
-//                Log.e("결과:", "실패 : $t")
-//            }
-//        })
-//    }
 }

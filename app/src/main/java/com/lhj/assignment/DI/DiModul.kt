@@ -24,7 +24,7 @@ var retrofitPart = module {
 
 var adapterPart = module {
     factory {
-        MainListAdapter()
+        MainListAdapter(null)
     }
 }
 
