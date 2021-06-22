@@ -1,5 +1,8 @@
 package com.lhj.assignment.Adapter
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,30 +11,31 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lhj.assignment.Data.DataClass
 import com.lhj.assignment.Database.DBHelper
+import com.lhj.assignment.DetailActivity
 import com.lhj.assignment.Fragment.FavoritesFragment
 import com.lhj.assignment.R
 import com.lhj.assignment.Util.FavClick
 import com.lhj.assignment.Util.SortClick
 
-class FavListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FavListAdapter(val context: Activity?) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TYPE_HEADER: Int = 0
     private val TYPE_ITEM: Int = 1
 
-    private var favData: MutableList<DataClass.FavoriteData> = mutableListOf()
+    private var mData: MutableList<DataClass.MainData> = mutableListOf()
+//    private var favData: MutableList<DataClass.FavoriteData> = mutableListOf()
 
     private lateinit var favClick: FavClick
     private lateinit var regTimeSortClick: SortClick
     private lateinit var rateSortClick: SortClick
-//    private lateinit var regTimeSortClick: FavClick
-//    private lateinit var rateSortClick: FavClick
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        Log.e("asdfgg", "viewType : " + viewType)
+        Log.e("LHJ", "viewType : " + viewType)
         if (viewType == TYPE_ITEM) {
             val view =
                 LayoutInflater.from(parent!!.context).inflate(R.layout.fav_list_item, parent, false)
@@ -45,7 +49,7 @@ class FavListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is MainViewHolder) {
-            holder.bind(favData[position - 1], position - 1)
+            holder.bind(mData[position - 1], position - 1)
         } else if (holder is HeadViewHolder) {
             holder.bind()
         }
@@ -60,24 +64,29 @@ class FavListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return favData.size + 1
+        return mData.size + 1
     }
 
-    fun setFavDataList(dataList: List<DataClass.FavoriteData>) {
-        favData = dataList as MutableList<DataClass.FavoriteData>
+    fun setDataList(dataList: List<DataClass.MainData>) {
+        mData = dataList as MutableList<DataClass.MainData>
         notifyDataSetChanged()
     }
 
-    fun getFavDataList(): List<DataClass.FavoriteData> {
-        return favData
-    }
+//    fun setFavDataList(dataList: List<DataClass.FavoriteData>) {
+//        favData = dataList as MutableList<DataClass.FavoriteData>
+//        notifyDataSetChanged()
+//    }
 
-    fun getFavData(pos: Int): DataClass.FavoriteData {
-        return favData.get(pos)
+//    fun getFavDataList(): List<DataClass.FavoriteData> {
+//        return favData
+//    }
+
+    fun getFavData(pos: Int): DataClass.MainData {
+        return mData.get(pos)
     }
 
     fun removeFavData(pos: Int) {
-        favData.removeAt(pos)
+        mData.removeAt(pos)
         notifyDataSetChanged()
     }
 
@@ -100,32 +109,37 @@ class FavListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class MainViewHolder(view: View) :
         RecyclerView.ViewHolder(view) {
 
+        private val main = itemView.findViewById<ConstraintLayout>(R.id.main)
         private val name_tv = itemView.findViewById<TextView>(R.id.name_tv)
         private val rate_tv = itemView.findViewById<TextView>(R.id.rate_tv)
         private val date_tv = itemView.findViewById<TextView>(R.id.date_tv)
         private val thumbnail_iv = itemView.findViewById<ImageView>(R.id.thumbnail_iv)
         private val fav_iv = itemView.findViewById<ImageView>(R.id.fav_iv)
 
-        fun bind(mData: DataClass.FavoriteData, pos: Int) {
-            Log.e("asdfgg", "mData.regTime : " + mData.regTime)
-            name_tv.text = mData.name
-            rate_tv.text = mData.rate.toString()
-            date_tv.text = mData.regTime
-            Glide.with(itemView).load(mData.thumbnail).into(thumbnail_iv)
-            changeFavImage(mData.id)
+        fun bind(fData: DataClass.MainData, pos: Int) {
+            name_tv.text = fData.name
+            rate_tv.text = fData.rate.toString()
+            date_tv.text = fData.regTime
+            Glide.with(itemView).load(fData.thumbnail).into(thumbnail_iv)
+            changeFavImage(fData.id)
+
+            main.setOnClickListener { view: View? ->
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra("mData", fData);
+                context?.startActivityForResult(intent, 1001)
+            }
 
             fav_iv.setOnClickListener(View.OnClickListener { view: View? ->
                 if (favClick != null) {
                     favClick.onFavClick(view, pos)
-                    changeFavImage(mData.id)
+                    changeFavImage(fData.id)
                 }
             })
         }
 
         private fun changeFavImage(id: Int) {
-            for (i in favData.indices) {
-                if (favData.get(i).id == id) {
-                    Log.e("Asdfg", "변해라잉")
+            for (i in mData.indices) {
+                if (mData.get(i).id == id) {
                     fav_iv.setImageResource(R.drawable.ic_star_on)
                     break
                 } else {

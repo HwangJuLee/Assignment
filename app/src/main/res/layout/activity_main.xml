@@ -27,17 +27,19 @@
             android:elevation="1dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:tabIndicatorHeight="4dp"
+            app:tabSelectedTextColor="#ff008577">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="메인" />
+                android:text="@string/main" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="즐겨찾기" />
+                android:text="@string/favorite" />
 
         </com.google.android.material.tabs.TabLayout>
 

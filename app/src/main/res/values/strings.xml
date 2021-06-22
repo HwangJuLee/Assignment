@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Assignment</string>
+    <string name="main">메인</string>
+    <string name="favorite">즐겨찾기</string>
+    <string name="regDate">최신순</string>
+    <string name="rate">평점순</string>
+    <string name="no_favorite">등록된 즐겨찾기가 없습니다.\n마음에 드는 숙소나 즐길거리를 저장하려면 별 아이콘을 누르세요.</string>
 </resources>

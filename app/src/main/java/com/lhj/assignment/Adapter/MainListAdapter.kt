@@ -1,5 +1,6 @@
 package com.lhj.assignment.Adapter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -16,10 +17,12 @@ import com.lhj.assignment.DetailActivity
 import com.lhj.assignment.R
 import com.lhj.assignment.Util.FavClick
 
-class MainListAdapter(val context: Context?) : RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
+class MainListAdapter(val context: Activity?) : RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
 
     private var mData: MutableList<DataClass.MainData> = mutableListOf()
-    private var favData: MutableList<DataClass.FavoriteData> = mutableListOf()
+//    private lateinit var mData: List<DataClass.MainData>
+    private var favData: MutableList<DataClass.MainData> = mutableListOf()
+//    private lateinit var favData: List<DataClass.FavoriteData>
 
     private lateinit var favClick: FavClick
 
@@ -27,7 +30,6 @@ class MainListAdapter(val context: Context?) : RecyclerView.Adapter<MainListAdap
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.main_list_item, parent, false)
-
 
         return ViewHolder(view)
     }
@@ -45,15 +47,15 @@ class MainListAdapter(val context: Context?) : RecyclerView.Adapter<MainListAdap
         notifyDataSetChanged()
     }
 
-    fun setFavDataList(dataList: List<DataClass.FavoriteData>) {
-        favData = dataList as MutableList<DataClass.FavoriteData>
+    fun setFavDataList(dataList: List<DataClass.MainData>) {
+        favData = dataList as MutableList<DataClass.MainData>
     }
 
     fun getData(pos: Int): DataClass.MainData {
         return mData.get(pos)
     }
 
-    fun getFavDataList(): List<DataClass.FavoriteData> {
+    fun getFavDataList(): List<DataClass.MainData> {
         return favData
     }
 
@@ -79,7 +81,7 @@ class MainListAdapter(val context: Context?) : RecyclerView.Adapter<MainListAdap
             main.setOnClickListener { view: View? ->
                 val intent = Intent(context, DetailActivity::class.java)
                 intent.putExtra("mData", mData);
-                context?.startActivity(intent)
+                context?.startActivityForResult(intent, 1000)
             }
 
             fav_iv.setOnClickListener(View.OnClickListener { view: View? ->
@@ -93,7 +95,6 @@ class MainListAdapter(val context: Context?) : RecyclerView.Adapter<MainListAdap
         private fun changeFavImage(id: Int) {
             for (i in favData.indices) {
                 if (favData.get(i).id == id) {
-                    Log.e("Asdfg", "변해라잉")
                     fav_iv.setImageResource(R.drawable.ic_star_on)
                     break
                 } else {

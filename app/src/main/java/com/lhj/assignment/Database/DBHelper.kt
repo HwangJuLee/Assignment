@@ -26,7 +26,7 @@ class DBHelper(
     override fun onCreate(db: SQLiteDatabase) {
         var sql_create_table: String = "CREATE TABLE if not exists " + FAV_TABLE + " (" +
                 "id integer primary key," +
-                "name text, thumbnail text, rate real, regTime text);";
+                "name text, thumbnail text, rate real, imagePath text, subject text, price integer , regTime text);";
 
         db.execSQL(sql_create_table)
     }
@@ -38,9 +38,8 @@ class DBHelper(
         onCreate(db)
     }
 
-    fun insertData(mData: DataClass.FavoriteData) {
-
-        Log.e("asdfgg", "DB 삽입 : " + mData.name)
+    //즐겨찾기 DB 삽입
+    fun insertData(mData: DataClass.MainData) {
 
         val database = this.writableDatabase
         var contentValues = ContentValues()
@@ -48,23 +47,28 @@ class DBHelper(
         contentValues.put("name", mData.name)
         contentValues.put("thumbnail", mData.thumbnail)
         contentValues.put("rate", mData.rate)
+        contentValues.put("imagePath", mData.description.imagePath)
+        contentValues.put("subject", mData.description.subject)
+        contentValues.put("price", mData.description.price)
         contentValues.put("regTime", mData.regTime)
 
         database.insert(FAV_TABLE, null, contentValues)
     }
 
-    fun selectData(): List<DataClass.FavoriteData> {
-        val resultData: MutableList<DataClass.FavoriteData> = mutableListOf()
-        lateinit var data: DataClass.FavoriteData
+    //즐겨찾기 데이터 조회
+    fun selectData(): List<DataClass.MainData> {
+        val resultData: MutableList<DataClass.MainData> = mutableListOf()
+        lateinit var data: DataClass.MainData
         val database = this.readableDatabase
         var result: Cursor = database.query(FAV_TABLE, null, null, null, null, null, null)
         while (result.moveToNext()) {
 
-            data = DataClass.FavoriteData(
+            data = DataClass.MainData(
                 result.getInt(result.getColumnIndex("id")),
                 result.getString(result.getColumnIndex("name")),
                 result.getDouble(result.getColumnIndex("rate")),
                 result.getString(result.getColumnIndex("thumbnail")),
+                DataClass.Description(result.getString(result.getColumnIndex("imagePath")), result.getString(result.getColumnIndex("subject")), result.getInt(result.getColumnIndex("price"))),
                 result.getString(result.getColumnIndex("regTime"))
             )
 
@@ -74,18 +78,21 @@ class DBHelper(
         return resultData
     }
 
-    fun checkData(id : Int): List<DataClass.FavoriteData> {
-        val resultData: MutableList<DataClass.FavoriteData> = mutableListOf()
-        lateinit var data: DataClass.FavoriteData
+    //즐겨찾기 데이터 확인
+    fun checkData(id: Int): List<DataClass.MainData> {
+        val resultData: MutableList<DataClass.MainData> = mutableListOf()
+        lateinit var data: DataClass.MainData
         val database = this.readableDatabase
-        var result: Cursor = database.rawQuery("SELECT * FROM " + FAV_TABLE + " WHERE id == " + id,null)
+        var result: Cursor =
+            database.rawQuery("SELECT * FROM " + FAV_TABLE + " WHERE id == " + id, null)
 
         while (result.moveToNext()) {
-            data = DataClass.FavoriteData(
+            data = DataClass.MainData(
                 result.getInt(result.getColumnIndex("id")),
                 result.getString(result.getColumnIndex("name")),
                 result.getDouble(result.getColumnIndex("rate")),
                 result.getString(result.getColumnIndex("thumbnail")),
+                DataClass.Description(result.getString(result.getColumnIndex("imagePath")), result.getString(result.getColumnIndex("subject")), result.getInt(result.getColumnIndex("price"))),
                 result.getString(result.getColumnIndex("regTime"))
             )
             resultData.add(result.position, data)
@@ -94,19 +101,21 @@ class DBHelper(
         return resultData
     }
 
-    fun selectData(orderBy: String, orderType: String): List<DataClass.FavoriteData> {
-        val resultData: MutableList<DataClass.FavoriteData> = mutableListOf()
-        lateinit var data: DataClass.FavoriteData
+    //즐겨찾기 데이터 정렬
+    fun selectData(orderBy: String, orderType: String): List<DataClass.MainData> {
+        val resultData: MutableList<DataClass.MainData> = mutableListOf()
+        lateinit var data: DataClass.MainData
         val database = this.readableDatabase
         var result: Cursor =
             database.query(FAV_TABLE, null, null, null, null, null, orderBy + " " + orderType)
         while (result.moveToNext()) {
 
-            data = DataClass.FavoriteData(
+            data = DataClass.MainData(
                 result.getInt(result.getColumnIndex("id")),
                 result.getString(result.getColumnIndex("name")),
                 result.getDouble(result.getColumnIndex("rate")),
                 result.getString(result.getColumnIndex("thumbnail")),
+                DataClass.Description(result.getString(result.getColumnIndex("imagePath")), result.getString(result.getColumnIndex("subject")), result.getInt(result.getColumnIndex("price"))),
                 result.getString(result.getColumnIndex("regTime"))
             )
 
@@ -116,13 +125,8 @@ class DBHelper(
         return resultData
     }
 
-    fun updateFavData(id: Int, isFav: String, regTime: String) {
-        val database = this.writableDatabase
-        database.execSQL("UPDATE " + FAV_TABLE + " SET regTime = " + "'" + regTime + "'" + " WHERE id == " + id)
-    }
-
+    //즐겨찾기 데이터 삭제
     fun deleteFavData(id: Int) {
-        Log.e("asdfgg", "삭제??")
         val database = this.writableDatabase
         database.execSQL("DELETE FROM $FAV_TABLE WHERE id == $id")
     }

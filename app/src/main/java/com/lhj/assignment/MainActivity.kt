@@ -1,5 +1,6 @@
 package com.lhj.assignment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.Observer
@@ -24,24 +25,30 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
-    //TODO : 1. 리스트 페이징 2. 프레그먼트 이동 3. 즐겨찾기 정렬 (O) 4. 상세화면(갔다 온 뒤 리프레쉬) 5. 데이터 순차적으로 받기 6. UI 작업 7. 코드정리 및 주석
-
-    lateinit var dbHelper: DBHelper
+    companion object {
+        lateinit var dbHelper: DBHelper
+    }
 
     override val layoutResourceId: Int get() = R.layout.activity_main   //resource init
     override val viewModel: MainViewModel by viewModel()    //koin
 
     override fun initStartView() {
-        Log.e("Asdfgg", "initStartView");
+        Log.e(TAG, "initStartView")
     }
 
     override fun initDataBinding() {
-        Log.e("Asdfgg", "initDataBinding");
+        Log.e(TAG, "initDataBinding")
+        //DB init
         dbHelper = DBHelper(this, "main.db", null, 1)
     }
 
     override fun initAfterBinding() {
-        Log.e("Asdfgg", "initAfterBinding");
+        Log.e(TAG, "initAfterBinding")
+
+//        getApiData()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, MainFragment()).commit()
+
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
@@ -53,11 +60,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 switchFragment(tab?.position)
             }
         })
-
-        supportFragmentManager.beginTransaction().replace(R.id.container, MainFragment())
-            .commit()  //메인 프래그먼트 설정
     }
 
+    //메인 & 즐겨찾기 변겅
     private fun switchFragment(type: Int?) {
         val transaction = supportFragmentManager.beginTransaction()
         when (type) {
@@ -69,5 +74,26 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             }
         }
         transaction.commit()
+    }
+
+    //상세보기 -> 메인&즐겨찾기 화면 refresh
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1000) {
+            if (resultCode == RESULT_OK) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, MainFragment()).commit()
+            }
+        } else if (requestCode == 1001) {
+            if (resultCode == RESULT_OK) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, FavoritesFragment()).commit()
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+
     }
 }

@@ -16,9 +16,9 @@ class DataClass {
 
     data class Data(
         @SerializedName("totalCount")
-        var totalCount: Int,
+        var totalCount: Int,            //데이터 수
         @SerializedName("product")
-        var product: List<MainData>
+        var product: List<MainData>     //메인 데이터 리스트
     )
 
     data class MainData(
@@ -31,7 +31,8 @@ class DataClass {
         @SerializedName("thumbnail")
         var thumbnail: String,          // 썸네일 경로
         @SerializedName("description")
-        var description: Description          // 상세정보
+        var description: Description,
+        var regTime: String
     ) : Serializable
 
     data class Description(
@@ -43,12 +44,12 @@ class DataClass {
         var price: Int              // 가격
     ) : Serializable
 
-    data class FavoriteData(
-        var id: Int,                // 게시글 ID
-        var name: String,          // 게시글 이름
-        var rate: Double,          // 평점
-        var thumbnail: String,          // 썸네일 경로
-        var regTime: String          // 가격
-    )
+//    data class FavoriteData(
+//        var id: Int,                // 게시글 ID
+//        var name: String,          // 게시글 이름
+//        var rate: Double,          // 평점
+//        var thumbnail: String,        // 썸네일 경로
+//        var regTime: String          // 등록시간
+//    )
 
 }

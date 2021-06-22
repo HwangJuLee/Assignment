@@ -17,7 +17,7 @@
             android:id="@+id/regTime_sort_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="최신순"
+            android:text="@string/regDate"
             android:textColor="#333333"
             android:textSize="16dp">
 
@@ -44,7 +44,7 @@
             android:id="@+id/rate_sort_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="평점순"
+            android:text="@string/rate"
             android:textColor="#333333"
             android:textSize="16dp">
 

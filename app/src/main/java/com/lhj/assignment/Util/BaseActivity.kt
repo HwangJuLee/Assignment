@@ -8,6 +8,8 @@ import androidx.databinding.ViewDataBinding
 abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> :
     AppCompatActivity() {
 
+    val TAG = "LHJ"
+
     lateinit var viewDataBinding: T
 
     /**

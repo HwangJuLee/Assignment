@@ -7,10 +7,10 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface NetworkAPI {
-    //데이터 가져오기
+    //Data Request
     @GET("App/json/{apiType}")
     fun getData(
-        @Path("apiType") apiType : String
+        @Path("apiType") apiType: String
     ): Single<DataClass.ResponseData>
 
 }
