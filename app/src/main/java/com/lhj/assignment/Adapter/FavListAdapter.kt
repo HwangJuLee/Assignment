@@ -28,7 +28,6 @@ class FavListAdapter(val context: Activity?) : RecyclerView.Adapter<RecyclerView
     private val TYPE_ITEM: Int = 1
 
     private var mData: MutableList<DataClass.MainData> = mutableListOf()
-//    private var favData: MutableList<DataClass.FavoriteData> = mutableListOf()
 
     private lateinit var favClick: FavClick
     private lateinit var regTimeSortClick: SortClick
@@ -72,15 +71,6 @@ class FavListAdapter(val context: Activity?) : RecyclerView.Adapter<RecyclerView
         notifyDataSetChanged()
     }
 
-//    fun setFavDataList(dataList: List<DataClass.FavoriteData>) {
-//        favData = dataList as MutableList<DataClass.FavoriteData>
-//        notifyDataSetChanged()
-//    }
-
-//    fun getFavDataList(): List<DataClass.FavoriteData> {
-//        return favData
-//    }
-
     fun getFavData(pos: Int): DataClass.MainData {
         return mData.get(pos)
     }
@@ -119,7 +109,7 @@ class FavListAdapter(val context: Activity?) : RecyclerView.Adapter<RecyclerView
         fun bind(fData: DataClass.MainData, pos: Int) {
             name_tv.text = fData.name
             rate_tv.text = fData.rate.toString()
-            date_tv.text = fData.regTime
+            date_tv.text = "등록일자 : " + fData.regTime
             Glide.with(itemView).load(fData.thumbnail).into(thumbnail_iv)
             changeFavImage(fData.id)
 

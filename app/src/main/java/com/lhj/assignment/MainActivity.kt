@@ -45,7 +45,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     override fun initAfterBinding() {
         Log.e(TAG, "initAfterBinding")
 
-//        getApiData()
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, MainFragment()).commit()
 
