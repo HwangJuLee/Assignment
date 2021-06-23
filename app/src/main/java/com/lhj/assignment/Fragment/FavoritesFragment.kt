@@ -1,23 +1,16 @@
 package com.lhj.assignment.Fragment
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lhj.assignment.Adapter.FavListAdapter
-import com.lhj.assignment.Adapter.MainListAdapter
-import com.lhj.assignment.Data.DataClass
 import com.lhj.assignment.Database.DBHelper
 import com.lhj.assignment.MainActivity
 import com.lhj.assignment.R
 import com.lhj.assignment.Util.FavClick
 import com.lhj.assignment.Util.SortClick
 import kotlinx.android.synthetic.main.fragment_fav.*
-import kotlinx.android.synthetic.main.fragment_main.*
-import java.time.LocalDateTime
 
 class FavoritesFragment() : Fragment(R.layout.fragment_fav) {
 

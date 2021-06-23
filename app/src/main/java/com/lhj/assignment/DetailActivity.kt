@@ -1,11 +1,10 @@
 package com.lhj.assignment
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.lhj.assignment.Data.DataClass
 import com.lhj.assignment.Database.DBHelper

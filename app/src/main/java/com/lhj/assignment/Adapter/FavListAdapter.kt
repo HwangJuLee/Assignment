@@ -1,7 +1,6 @@
 package com.lhj.assignment.Adapter
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.util.Log

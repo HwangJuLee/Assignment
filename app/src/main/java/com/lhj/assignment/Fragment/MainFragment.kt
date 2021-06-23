@@ -47,7 +47,7 @@ class MainFragment() : Fragment(R.layout.fragment_main) {
                 val totalCount = recyclerView.adapter!!.itemCount
 
                 if (lastPosition + 1 == totalCount) {
-                    if(totalCount % 20 == 0){
+                    if (totalCount % 20 == 0) {
                         checkPage++
                         getApiData(checkPage)
                     }
@@ -97,30 +97,16 @@ class MainFragment() : Fragment(R.layout.fragment_main) {
 
     private fun subscribeObservers() {
         viewModel.responseLiveData.observe(this@MainFragment.viewLifecycleOwner, Observer {
-//            mData.addAll(it.data?.product)
             mainListAdapter.setDataList(it.data?.product)
             mainListAdapter.setFavDataList(dbHelper.selectData())
         })
 
-//        viewModel.responseLiveData2.observe(this@MainFragment.viewLifecycleOwner, Observer {
-//            mData.addAll(it.data?.product)
-//        })
-//
-//        viewModel.responseLiveData3.observe(this@MainFragment.viewLifecycleOwner, Observer {
-//            mData.addAll(it.data?.product)
-//            supportFragmentManager.beginTransaction().replace(R.id.container, MainFragment(mData))
-//                .commit()
-//        })
     }
 
     //API 호출
-    fun getApiData(apiType : Int) = runBlocking<Unit> {
+    fun getApiData(apiType: Int) = runBlocking<Unit> {
         launch(Dispatchers.IO) {
             viewModel.getResponseData(apiType.toString() + ".json")
-//            delay(300)
-//            viewModel.getResponseData(MainActivity.API_2)
-//            delay(300)
-//            viewModel.getResponseData(MainActivity.API_3)
         }
     }
 

@@ -5,4 +5,5 @@
     <string name="regDate">최신순</string>
     <string name="rate">평점순</string>
     <string name="no_favorite">등록된 즐겨찾기가 없습니다.\n마음에 드는 숙소나 즐길거리를 저장하려면 별 아이콘을 누르세요.</string>
+    <string name="app_exit">뒤로 버튼을 한번 더 누르면 종료합니다.</string>
 </resources>

@@ -20,9 +20,7 @@ import com.lhj.assignment.Util.FavClick
 class MainListAdapter(val context: Activity?) : RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
 
     private var mData: MutableList<DataClass.MainData> = mutableListOf()
-//    private lateinit var mData: List<DataClass.MainData>
     private var favData: MutableList<DataClass.MainData> = mutableListOf()
-//    private lateinit var favData: List<DataClass.FavoriteData>
 
     private lateinit var favClick: FavClick
 
@@ -78,12 +76,14 @@ class MainListAdapter(val context: Activity?) : RecyclerView.Adapter<MainListAda
             Glide.with(itemView).load(mData.thumbnail).into(thumbnail_iv)
             changeFavImage(mData.id)
 
+            //상세보기 클릭
             main.setOnClickListener { view: View? ->
                 val intent = Intent(context, DetailActivity::class.java)
                 intent.putExtra("mData", mData);
                 context?.startActivityForResult(intent, 1000)
             }
 
+            //즐겨찾기 클릭
             fav_iv.setOnClickListener(View.OnClickListener { view: View? ->
                 if (favClick != null) {
                     favClick.onFavClick(view, pos)
@@ -92,6 +92,7 @@ class MainListAdapter(val context: Activity?) : RecyclerView.Adapter<MainListAda
             })
         }
 
+        //즐겨찾기 이미지 변경
         private fun changeFavImage(id: Int) {
             for (i in favData.indices) {
                 if (favData.get(i).id == id) {

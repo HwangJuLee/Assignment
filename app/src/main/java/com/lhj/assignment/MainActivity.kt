@@ -1,26 +1,16 @@
 package com.lhj.assignment
 
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.Observer
+import android.widget.Toast
 import com.google.android.material.tabs.TabLayout
-import com.google.gson.GsonBuilder
-import com.lhj.assignment.Data.DataClass
 import com.lhj.assignment.Database.DBHelper
 import com.lhj.assignment.Fragment.FavoritesFragment
 import com.lhj.assignment.Fragment.MainFragment
-import com.lhj.assignment.Retrofit2.NetworkAPI
 import com.lhj.assignment.Util.BaseActivity
 import com.lhj.assignment.Util.MainViewModel
 import com.lhj.assignment.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
@@ -30,7 +20,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     override val layoutResourceId: Int get() = R.layout.activity_main   //resource init
-    override val viewModel: MainViewModel by viewModel()    //koin
+    override val viewModel: MainViewModel by viewModel()
+    var time : Long = 0
 
     override fun initStartView() {
         Log.e(TAG, "initStartView")
@@ -92,7 +83,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-
+        if (System.currentTimeMillis() - time >= 2000) {
+            time = System.currentTimeMillis()
+            Toast.makeText(applicationContext, getString(R.string.app_exit), Toast.LENGTH_SHORT)
+                .show()
+        } else if (System.currentTimeMillis() - time < 2000) {
+            finish()
+        }
     }
 }
